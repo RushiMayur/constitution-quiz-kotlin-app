@@ -1,0 +1,4 @@
+/build
+
+# Ignore sensitive configuration files
+app/src/main/res/raw/config.properties
