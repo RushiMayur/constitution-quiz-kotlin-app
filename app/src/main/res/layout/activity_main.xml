@@ -7,6 +7,22 @@
     android:id="@+id/parentLayout"
     tools:context=".MainActivity">
 
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#FF0000"
+        android:backgroundTint="#ffffff"
+        android:layout_marginTop="20dp"
+        android:textSize="12sp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="End Quiz"/>
+
+
     <LinearLayout
         android:id="@+id/llMain"
         android:layout_width="match_parent"
@@ -15,14 +31,17 @@
 
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
+        android:backgroundTint="#5894FF"
         android:text="Start"/>
+
+
 
 
 

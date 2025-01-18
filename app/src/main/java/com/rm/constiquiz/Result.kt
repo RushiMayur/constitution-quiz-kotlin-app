@@ -113,22 +113,23 @@ class Result : AppCompatActivity() {
 
         btnRestart.setOnClickListener {
 
-            val editor = sharedPreferences.edit()
-
-// Initialize variables
-            for (i in 1..5) {
-                for (j in 1..3) {
-                    editor.putString("q${i}${j}", "0") // Example: q11, q12, ..., q53
-                }
-            }
-            editor.putString("section", "1")  // Current section
-            editor.putString("completed", "0") // Quiz completion status
-
-            editor.apply()
+//            val editor = sharedPreferences.edit()
+//
+//// Initialize variables
+//            for (i in 1..5) {
+//                for (j in 1..3) {
+//                    editor.putString("q${i}${j}", "0") // Example: q11, q12, ..., q53
+//                }
+//            }
+//            editor.putString("section", "1")  // Current section
+//            editor.putString("completed", "0") // Quiz completion status
+//
+//            editor.apply()
 
 
             val intent = Intent(this, Start::class.java)
             startActivity(intent)
+            finish()
 
         }
 

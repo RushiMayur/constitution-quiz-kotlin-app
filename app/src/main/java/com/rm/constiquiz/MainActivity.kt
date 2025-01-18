@@ -1,6 +1,10 @@
 package com.rm.constiquiz
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -9,7 +13,9 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONObject
@@ -18,12 +24,16 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var btnStart: Button
     lateinit var btnNext: Button
+    lateinit var btnEnd: AppCompatButton
     lateinit var btnNextSection:Button
     lateinit var txtwait: TextView
     lateinit var parentLayout: RelativeLayout
     lateinit var rvQuiz:RecyclerView
     private lateinit var questionAdapter: QuestionAdapter
     private val questionsList = mutableListOf<DataClassQuestion>()
+
+    var doubleBackToExitPressedOnce = false
+
 
     var already1 = "nil"
 
@@ -44,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         btnStart = findViewById(R.id.btnStart)
         btnNext = findViewById(R.id.btnNext)
+        btnEnd = findViewById(R.id.btnEnd)
         btnNextSection = findViewById(R.id.btnNextSection)
         txtwait = findViewById(R.id.txtWait)
         parentLayout = findViewById(R.id.parentLayout)
@@ -177,28 +188,88 @@ class MainActivity : AppCompatActivity() {
 
 
         btnNextSection.setOnClickListener {
-            a++
-            // Increment the section value
+
+
+
             val sharedPreferences1 = getSharedPreferences("QuizPreferences", MODE_PRIVATE)
-            val currentSection = sharedPreferences1.getString("section", "1")!!.toInt() // Get current section
-            val newSection = currentSection + 1 // Increment section
-            val editor1 = sharedPreferences1.edit()
-            editor1.putString("section", newSection.toString()) // Save the new section
-            editor1.apply()
 
-            // Clear the list and update the adapter for the next section
-            questionsList.clear() // Clear the list
-            questionAdapter.notifyDataSetChanged()
+            val completed1 = sharedPreferences1.getString("completed", "0") // Default to "0" if not found
 
-            Toast.makeText(this, "Moving to Section $newSection!", Toast.LENGTH_SHORT).show()
+// Check if the value of 'completed' is "1"
+            if (completed1 == "1") {
+                val intent = Intent(this, Result::class.java)
+                startActivity(intent)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
-            // Adjust button visibility
-            btnStart.visibility = VISIBLE
-            btnNextSection.visibility = GONE
+            }
+            else {
+                a++
+                // Increment the section value
+                val currentSection = sharedPreferences1.getString("section", "1")!!.toInt() // Get current section
+                val newSection = currentSection + 1 // Increment section
+                val editor1 = sharedPreferences1.edit()
+                editor1.putString("section", newSection.toString()) // Save the new section
+                editor1.apply()
+
+                // Clear the list and update the adapter for the next section
+                questionsList.clear() // Clear the list
+                questionAdapter.notifyDataSetChanged()
+
+                Toast.makeText(this, "Moving to Section $newSection!", Toast.LENGTH_SHORT).show()
+
+                // Adjust button visibility
+                btnStart.visibility = VISIBLE
+                btnNextSection.visibility = GONE
+            }
+
+
+
+
         }
 
 
 
+        btnEnd.setOnClickListener {
+
+
+
+
+
+            val alterDialog = AlertDialog.Builder(this)
+            alterDialog.setTitle("End Quiz")
+            alterDialog.setMessage("Are you sure to end this quiz?")
+            alterDialog.setPositiveButton("Submit") { _, _ ->
+
+
+
+                val sharedPreferences1 = getSharedPreferences("QuizPreferences", MODE_PRIVATE)
+                val editor1 = sharedPreferences1.edit()
+                editor1.putString("completed", "1") // Set completed to "1"
+                editor1.apply()
+
+
+                val intent = Intent(this, Result::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+
+                //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
+            }
+            alterDialog.setNegativeButton("No"){ _, _ ->
+
+
+            }
+            alterDialog.create()
+            alterDialog.show()
+
+
+
+
+
+
+
+
+        }
 
 
 
@@ -302,14 +373,16 @@ class MainActivity : AppCompatActivity() {
                                     editor.putString("completed", "1") // Set completed to "1"
                                     editor.apply()
 
+                                    btnNextSection.setText("Get Results")
+
                                     // Log all q values
-                                    for (i in 1..5) {
-                                        for (j in 1..3) {
-                                            val questionKey = "q${i}${j}" // Generate keys like q11, q12, ..., q53
-                                            val value = sharedPreferences.getString(questionKey, "0") // Default to "0" if not found
-                                            Log.d("QuizStatus", "Key: $questionKey, Value: $value")
-                                        }
-                                    }
+//                                    for (i in 1..5) {
+//                                        for (j in 1..3) {
+//                                            val questionKey = "q${i}${j}" // Generate keys like q11, q12, ..., q53
+//                                            val value = sharedPreferences.getString(questionKey, "0") // Default to "0" if not found
+//                                            Log.d("QuizStatus", "Key: $questionKey, Value: $value")
+//                                        }
+//                                    }
                                     Toast.makeText(this, "All sections completed!", Toast.LENGTH_SHORT).show()
                                 } else {
                                     // Proceed to the next section
@@ -323,6 +396,9 @@ class MainActivity : AppCompatActivity() {
 
 
 
+                            }
+                            else{
+                                btnNextSection.visibility  = GONE
                             }
 
 
@@ -350,5 +426,29 @@ class MainActivity : AppCompatActivity() {
         }
 
         task.execute(textToGenerate)
+    }
+
+
+
+
+
+
+
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            // If the back button is pressed twice, exit the activity
+            super.onBackPressed()
+            return
+        }
+
+        // If the back button is pressed for the first time, show a Toast
+        doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Current quiz data will be lost. Click back again to exit.", Toast.LENGTH_SHORT).show()
+
+        // Reset the flag after 2 seconds
+        Handler(Looper.getMainLooper()).postDelayed({
+            doubleBackToExitPressedOnce = false
+        }, 2000) // 2000ms = 2 seconds
     }
 }
