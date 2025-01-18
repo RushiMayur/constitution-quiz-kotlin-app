@@ -18,13 +18,25 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var btnStart: Button
     lateinit var btnNext: Button
+    lateinit var btnNextSection:Button
     lateinit var txtwait: TextView
     lateinit var parentLayout: RelativeLayout
     lateinit var rvQuiz:RecyclerView
     private lateinit var questionAdapter: QuestionAdapter
     private val questionsList = mutableListOf<DataClassQuestion>()
 
-    var already = "nil"
+    var already1 = "nil"
+
+    var already2 = "nil"
+
+    var already3 = "nil"
+
+    var already4 = "nil"
+
+    var already5 = "nil"
+
+
+    var a = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +44,11 @@ class MainActivity : AppCompatActivity() {
 
         btnStart = findViewById(R.id.btnStart)
         btnNext = findViewById(R.id.btnNext)
+        btnNextSection = findViewById(R.id.btnNextSection)
         txtwait = findViewById(R.id.txtWait)
         parentLayout = findViewById(R.id.parentLayout)
         rvQuiz = findViewById(R.id.rvQuiz)
+
 
 
         // Set up RecyclerView
@@ -45,18 +59,80 @@ class MainActivity : AppCompatActivity() {
 
 
 
+        val text1 = "Make a random question for a quiz regarding Indian constitution from your knowledge. Give four options, each option separated with #. Then give correct answer number 1 or 2 or 3 or 4 at the end after another #. Then give one or 2 sentence explanation for the answer after another #. Don't give anything extra, and don't make newline. Also don't use any apostrophe or double quotes anywhere." +
+                " It should be in this format - 'question#option1#option2#option3#option4#answerNumber#explanation'. "
+        val text2 = "Make a random question for a quiz regarding American constitution from your knowledge. Give four options, each option separated with #. Then give correct answer number 1 or 2 or 3 or 4 at the end after another #. Then give one or 2 sentence explanation for the answer after another #. Don't give anything extra, and don't make newline. Also don't use any apostrophe or double quotes anywhere." +
+                " It should be in this format - 'question#option1#option2#option3#option4#answerNumber#explanation'. "
+        val text3 = "Make a random question for a quiz regarding Movies from your knowledge. Give four options, each option separated with #. Then give correct answer number 1 or 2 or 3 or 4 at the end after another #. Then give one or 2 sentence explanation for the answer after another #. Don't give anything extra, and don't make newline. Also don't use any apostrophe or double quotes anywhere." +
+                " It should be in this format - 'question#option1#option2#option3#option4#answerNumber#explanation'. "
+        val text4 = "Make a random question for a quiz regarding smart phones from your knowledge. Give four options, each option separated with #. Then give correct answer number 1 or 2 or 3 or 4 at the end after another #. Then give one or 2 sentence explanation for the answer after another #. Don't give anything extra, and don't make newline. Also don't use any apostrophe or double quotes anywhere." +
+                " It should be in this format - 'question#option1#option2#option3#option4#answerNumber#explanation'. "
+        val text5 = "Make a random question for a quiz regarding animals from your knowledge. Give four options, each option separated with #. Then give correct answer number 1 or 2 or 3 or 4 at the end after another #. Then give one or 2 sentence explanation for the answer after another #. Don't give anything extra, and don't make newline. Also don't use any apostrophe or double quotes anywhere." +
+                " It should be in this format - 'question#option1#option2#option3#option4#answerNumber#explanation'. "
+
+
+
+
+
+        val sharedPreferences = getSharedPreferences("QuizPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+// Initialize variables
+        for (i in 1..5) {
+            for (j in 1..3) {
+                editor.putString("q${i}${j}", "0") // Example: q11, q12, ..., q53
+            }
+        }
+        editor.putString("section", "1")  // Current section
+        editor.putString("completed", "0") // Quiz completion status
+
+        editor.apply()
+
+
+
+
+
+
+
+
+
+
+
+
         btnStart.setOnClickListener {
             rvQuiz.visibility =VISIBLE
             btnStart.text = "NEXT"
             txtwait.visibility = VISIBLE
             //btnNext.visibility = VISIBLE
-
-
-            if(already == "nil"){
-                generateNewQuestion("")
+            var already = "xxx"
+            var text = "yyy"
+            if(a == 1){
+                already = already1
+                text = text1
             }
+            else if(a == 2){
+                already = already2
+                text = text2
+            }
+            else if(a == 3){
+                already = already3
+                text = text3
+            }
+            else if(a == 4){
+                already = already4
+                text = text4
+            }
+            else if(a == 5){
+                already = already5
+                text = text5
+            }
+
+            if(already == "xxx" || text == "yyy"){
+                Toast.makeText(this, "Try again!", Toast.LENGTH_SHORT).show()
+            }
+
             else{
-                generateNewQuestion("These questions are already asked, so don't ask them again : $already")
+                generateNewQuestion(already, text)
             }
 
         }
@@ -64,24 +140,85 @@ class MainActivity : AppCompatActivity() {
         btnNext.setOnClickListener {
             rvQuiz.visibility =VISIBLE
             txtwait.visibility = VISIBLE
-
-            if(already == "nil"){
-                generateNewQuestion("")
+            var already = "xxx"
+            var text = "yyy"
+            if(a == 1){
+                already = already1
+                text = text1
             }
+            else if(a == 2){
+                already = already2
+                text = text2
+            }
+            else if(a == 3){
+                already = already3
+                text = text3
+            }
+            else if(a == 4){
+                already = already4
+                text = text4
+            }
+            else if(a == 5){
+                already = already5
+                text = text5
+            }
+
+            if(already == "xxx" || text == "yyy"){
+                Toast.makeText(this, "Try again!", Toast.LENGTH_SHORT).show()
+            }
+
             else{
-                generateNewQuestion("These questions are already asked, so don't ask them again : $already")
+                generateNewQuestion(already, text)
             }
 
         }
 
 
+
+
+        btnNextSection.setOnClickListener {
+            a++
+            // Increment the section value
+            val sharedPreferences1 = getSharedPreferences("QuizPreferences", MODE_PRIVATE)
+            val currentSection = sharedPreferences1.getString("section", "1")!!.toInt() // Get current section
+            val newSection = currentSection + 1 // Increment section
+            val editor1 = sharedPreferences1.edit()
+            editor1.putString("section", newSection.toString()) // Save the new section
+            editor1.apply()
+
+            // Clear the list and update the adapter for the next section
+            questionsList.clear() // Clear the list
+            questionAdapter.notifyDataSetChanged()
+
+            Toast.makeText(this, "Moving to Section $newSection!", Toast.LENGTH_SHORT).show()
+
+            // Adjust button visibility
+            btnStart.visibility = VISIBLE
+            btnNextSection.visibility = GONE
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
-    private fun generateNewQuestion(already1 : String) {
-        val text1 = "Make a random question for a quiz regarding Indian constitution from your knowledge. Give four options, each option separated with #. Then give correct answer number 1 or 2 or 3 or 4 at the end after another #. Then give one or 2 sentence explanation for the answer after another #. Don't give anything extra, and don't make newline" +
-                " It should be in this format - 'question#option1#option2#option3#option4#answerNumber#explanation'. " + already1
-        Log.d("Quest", "Q: $text1")
-        val textToGenerate = text1
+    private fun generateNewQuestion(alreadyx : String, text :String) {
+        var textx = text
+
+        if(alreadyx !="nil"){
+            textx = text + "These questions are already asked, so don't ask the following :" + alreadyx
+        }
+
+        Log.d("Quest", "Q: $textx")
+        val textToGenerate = textx.replace("'", "").replace("\"", "")
         var output = ""
         var final = ""
 
@@ -112,7 +249,27 @@ class MainActivity : AppCompatActivity() {
                             val explanation = parts[6]
                             // Log the question and options
 
-                            already  = "$already. $question"
+
+
+
+                            if(alreadyx =="nil"){
+                                if(a == 1) already1= question
+                                else if(a == 2)  already2= question
+                                else if(a == 3)  already3= question
+                                else if(a == 4)  already4= question
+                                else if(a == 5)  already5= question
+                            }
+                            else{
+                                if(a == 1) already1= "$alreadyx, $question"
+                                else if(a == 2)  already2= "$alreadyx, $question"
+                                else if(a == 3)  already3= "$alreadyx, $question"
+                                else if(a == 4)  already4= "$alreadyx, $question"
+                                else if(a == 5)  already5= "$alreadyx, $question"
+                            }
+
+
+
+//                            already1  = "$alreadyx. $question"
 
                             Log.d("XYZ", "Question: $question")
                             Log.d("XYZ", "Option 1: $option1")
@@ -130,6 +287,46 @@ class MainActivity : AppCompatActivity() {
                             questionAdapter.notifyItemInserted(questionsList.size - 1)
                             rvQuiz.scrollToPosition(questionsList.size - 1)
 
+
+                            if (questionsList.size >= 3) {
+                                //a++ // Increment the value of `a`
+//                                questionsList.clear() // Clear the list
+//                                questionAdapter.notifyDataSetChanged() // Notify adapter about data change
+
+                                val sharedPreferences = getSharedPreferences("QuizPreferences", MODE_PRIVATE)
+                                val currentSection = sharedPreferences.getString("section", "1")!!.toInt() // Get current section
+
+                                if (currentSection == 5) {
+                                    // Mark the quiz as completed
+                                    val editor = sharedPreferences.edit()
+                                    editor.putString("completed", "1") // Set completed to "1"
+                                    editor.apply()
+
+                                    // Log all q values
+                                    for (i in 1..5) {
+                                        for (j in 1..3) {
+                                            val questionKey = "q${i}${j}" // Generate keys like q11, q12, ..., q53
+                                            val value = sharedPreferences.getString(questionKey, "0") // Default to "0" if not found
+                                            Log.d("QuizStatus", "Key: $questionKey, Value: $value")
+                                        }
+                                    }
+                                    Toast.makeText(this, "All sections completed!", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    // Proceed to the next section
+
+                                    btnNext.visibility = GONE
+                                    btnStart.visibility = GONE
+                                    btnNextSection.visibility  = VISIBLE
+                                }
+
+
+
+
+
+                            }
+
+
+
                             //btnNext.visibility= VISIBLE
                             txtwait.visibility = GONE
 
@@ -141,6 +338,14 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("XYZ", "Error parsing JSON: ${e.message}")
                 Toast.makeText(this, "Error parsing JSON!", Toast.LENGTH_SHORT).show()
+
+
+                if(a == 1) already1= "nil"
+                else if(a == 2)  already2=  "nil"
+                else if(a == 3)  already3=  "nil"
+                else if(a == 4)  already4=  "nil"
+                else if(a == 5)  already5=  "nil"
+
             }
         }
 
