@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.util.Linkify
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -29,6 +30,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var txtwait: TextView
     lateinit var parentLayout: RelativeLayout
     lateinit var rvQuiz:RecyclerView
+
+
+    lateinit var llTop : LinearLayout
+    lateinit var txtTitle : TextView
+    lateinit var txtDes : TextView
+    lateinit var txtLink : TextView
+    lateinit var btnStudied : AppCompatButton
+
+
+
+
     private lateinit var questionAdapter: QuestionAdapter
     private val questionsList = mutableListOf<DataClassQuestion>()
 
@@ -60,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         parentLayout = findViewById(R.id.parentLayout)
         rvQuiz = findViewById(R.id.rvQuiz)
 
+        llTop = findViewById(R.id.llTop)
+        txtTitle = findViewById(R.id.txtTitle)
+        txtDes = findViewById(R.id.txtDes)
+        txtLink = findViewById(R.id.txtLink)
+        btnStudied = findViewById(R.id.btnStudied)
+
 
 
         // Set up RecyclerView
@@ -83,6 +101,39 @@ class MainActivity : AppCompatActivity() {
 
 
 
+        val title1 = "Indian Constitution"
+        val des1 = "The Indian Constitution is the supreme law of India, laying the foundation for governance, rights, and duties of citizens."
+        val link1 = "https://en.wikipedia.org/wiki/Constitution_of_India"
+
+        val title2 = "American Constitution"
+        val des2 = "The American Constitution is the fundamental law of the United States, outlining the nation's government structure and citizens' rights."
+        val link2 = "https://en.wikipedia.org/wiki/Constitution_of_the_United_States"
+
+        val title3 = "About Movies"
+        val des3 = "Movies are a form of visual storytelling that entertain, educate, and inspire audiences worldwide through various genres and themes."
+        val link3 = "https://www.imdb.com/"
+
+        val title4 = "About Smart Phones"
+        val des4 = "Smartphones are handheld devices that combine communication, computing, and entertainment, revolutionizing modern digital lifestyles."
+        val link4 = "https://en.wikipedia.org/wiki/Smartphone"
+
+        val title5 = "About Animals"
+        val des5 = "Animals are living organisms that inhabit diverse ecosystems, playing crucial roles in nature and coexisting with humans in various ways."
+        val link5 = "https://en.wikipedia.org/wiki/Animal"
+
+
+
+        txtTitle.text = title1
+        txtDes.text = des1
+        txtLink.text = link1
+
+        Linkify.addLinks(txtLink, Linkify.WEB_URLS)
+        txtLink.isClickable = true
+        txtLink.isFocusable = true
+
+
+
+
 
 
         val sharedPreferences = getSharedPreferences("QuizPreferences", MODE_PRIVATE)
@@ -103,6 +154,13 @@ class MainActivity : AppCompatActivity() {
 
 
 
+        btnStudied.setOnClickListener {
+            llTop.visibility = GONE
+            btnStart.visibility = VISIBLE
+            btnStart.text = "START"
+            //btnNext.visibility = VISIBLE
+
+        }
 
 
 
@@ -138,7 +196,17 @@ class MainActivity : AppCompatActivity() {
                 text = text5
             }
 
-            if(already == "xxx" || text == "yyy"){
+            val sharedPreferences1 = getSharedPreferences("QuizPreferences", MODE_PRIVATE)
+            val completed1 = sharedPreferences1.getString("completed", "0") // Default to "0" if not found
+
+// Check if the value of 'completed' is "1"
+            if (completed1 == "1") {
+                val intent = Intent(this, Result::class.java)
+                startActivity(intent)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+            }
+            else if(already == "xxx" || text == "yyy"){
                 Toast.makeText(this, "Try again!", Toast.LENGTH_SHORT).show()
             }
 
@@ -174,7 +242,17 @@ class MainActivity : AppCompatActivity() {
                 text = text5
             }
 
-            if(already == "xxx" || text == "yyy"){
+            val sharedPreferences1 = getSharedPreferences("QuizPreferences", MODE_PRIVATE)
+            val completed1 = sharedPreferences1.getString("completed", "0") // Default to "0" if not found
+
+// Check if the value of 'completed' is "1"
+            if (completed1 == "1") {
+                val intent = Intent(this, Result::class.java)
+                startActivity(intent)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+            }
+            else if(already == "xxx" || text == "yyy"){
                 Toast.makeText(this, "Try again!", Toast.LENGTH_SHORT).show()
             }
 
@@ -211,6 +289,46 @@ class MainActivity : AppCompatActivity() {
                 editor1.putString("section", newSection.toString()) // Save the new section
                 editor1.apply()
 
+                btnNext.visibility = GONE
+                btnStart.visibility = GONE
+                llTop.visibility = VISIBLE
+
+
+                if (newSection in 1..5) {
+                    when (newSection) {
+                        1 -> {
+                            txtTitle.text = title1
+                            txtDes.text = des1
+                            txtLink.text = link1
+                        }
+                        2 -> {
+                            txtTitle.text = title2
+                            txtDes.text = des2
+                            txtLink.text = link2
+                        }
+                        3 -> {
+                            txtTitle.text = title3
+                            txtDes.text = des3
+                            txtLink.text = link3
+                        }
+                        4 -> {
+                            txtTitle.text = title4
+                            txtDes.text = des4
+                            txtLink.text = link4
+                        }
+                        5 -> {
+                            txtTitle.text = title5
+                            txtDes.text = des5
+                            txtLink.text = link5
+                        }
+                    }
+                }
+
+
+                Linkify.addLinks(txtLink, Linkify.WEB_URLS)
+                txtLink.isClickable = true
+                txtLink.isFocusable = true
+
                 // Clear the list and update the adapter for the next section
                 questionsList.clear() // Clear the list
                 questionAdapter.notifyDataSetChanged()
@@ -218,7 +336,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Moving to Section $newSection!", Toast.LENGTH_SHORT).show()
 
                 // Adjust button visibility
-                btnStart.visibility = VISIBLE
+                //btnStart.visibility = VISIBLE
                 btnNextSection.visibility = GONE
             }
 
@@ -373,7 +491,10 @@ class MainActivity : AppCompatActivity() {
                                     editor.putString("completed", "1") // Set completed to "1"
                                     editor.apply()
 
-                                    btnNextSection.setText("Get Results")
+                                    btnNextSection.visibility = VISIBLE
+                                    btnNextSection.setText("Get Results >")
+                                    btnNext.visibility = GONE
+                                    btnStart.visibility = GONE
 
                                     // Log all q values
 //                                    for (i in 1..5) {
