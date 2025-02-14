@@ -1,25 +1,25 @@
 <resources>
-    <string name="app_name">Consti Quiz</string>
+    <string name="app_name">ICQA</string>
 
 
 
 
     <string name="quiz_rules">
-        1. You must attempt all 15 questions to complete the quiz.\n
-        2. There is no time barrier; you can take as long as you need.\n
+        1. You must attempt all 15 questions to complete the quiz.\n\n
+        2. There is no time barrier; you can take as long as you need.\n\n
         3. The quiz is divided into 5 different sections:\n
-        - Indian Constitution\n
-        - American Constitution\n
-        - Mobile Phones\n
-        - Animals\n
-        - Movies\n
-        4. Each section contains 3 questions.\n
-        5. You cannot enter a section without finishing at-least 2 questions of the previous section.\n
-        6. You can end the quiz at any time, but any remaining unanswered questions will count as zero.\n
-        7. Your score will be calculated based on correct answers. No negative markings.\n
-        8. Answers cannot be changed once submitted.\n
-        9. Make sure to read each question carefully before selecting your answer.\n
-        10. Be honest while answering; this quiz is for educational purposes only.\n
+        - Preamble of Indian Constitution\n
+        - Fundamental Rights\n
+        - Indian Executive\n
+        - Indian Judiciary\n
+        - Directive Principles of State Policy\n\n
+        4. Each section contains 3 questions.\n\n
+        5. You cannot enter a section without finishing at-least 2 questions of the previous section.\n\n
+        6. You can end the quiz at any time, but any remaining unanswered questions will count as zero.\n\n
+        7. Your score will be calculated based on correct answers. No negative markings.\n\n
+        8. Answers cannot be changed once submitted.\n\n
+        9. Make sure to read each question carefully before selecting your answer.\n\n
+        10. Be honest while answering; this quiz is for educational purposes only.\n\n
         11. No cheating or using external help. Have fun and learn!
     </string>
 
