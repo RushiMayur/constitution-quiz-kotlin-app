@@ -24,7 +24,7 @@ class GoogleCloudGenerativeLanguageTask(private val context: Context, private va
         val text = params[0]
 
         try {
-            val url = URL("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey")
+            val url = URL("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey")
             val connection = url.openConnection() as HttpURLConnection
             connection.requestMethod = "POST"
             connection.setRequestProperty("Content-Type", "application/json")
